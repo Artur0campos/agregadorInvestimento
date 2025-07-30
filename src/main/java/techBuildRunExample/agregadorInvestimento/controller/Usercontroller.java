@@ -6,6 +6,7 @@ import techBuildRunExample.agregadorInvestimento.entity.User;
 import techBuildRunExample.agregadorInvestimento.service.UserService;
 
 import java.net.URI;
+import java.util.List;
 
 //porta de entrada
 @RestController
@@ -26,8 +27,32 @@ public class Usercontroller {
 
     @GetMapping("/{userID}")
     public ResponseEntity<User> getUserById(@PathVariable("userID") String userID){
-        return null;
+        var user = userService.getUserById(userID);
+        if (user.isPresent()){
+            return ResponseEntity.ok(user.get());
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
+    @GetMapping
+    public ResponseEntity<List<User>> listUsers(){
+        var users = userService.ListUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/{userID}")
+    public ResponseEntity<Void> updateUserById(@PathVariable("userID") String userId, @RequestBody UpdateUserDto updateUserDto){
+        userService.updateById(userId, updateUserDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userID}")
+    public ResponseEntity<Void> deleteById(@PathVariable("userID") String userID) {
+        userService.deleteByID(userID);
+        return ResponseEntity.noContent().build();
+    }
 
 }
